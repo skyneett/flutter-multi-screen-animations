@@ -536,10 +536,13 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   /// Tercera pantalla secundaria con título, contenedor y botón de regreso
   /// ============================================================================
   Widget _buildPantalla3() {
+    // Controlador para el campo de texto del formulario
+    final TextEditingController _textController = TextEditingController();
+
     return Scaffold(
       // AppBar con el título del estado 3
       appBar: AppBar(
-        title: const Text('Pantalla 3'),
+        title: const Text('Pantalla 3 - Formulario'),
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -570,7 +573,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
                   );
                 },
                 child: const Text(
-                  '¡Bienvenido a la Pantalla 3!',
+                  '¡Formulario Interactivo!',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -583,7 +586,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
               // Espacio entre el título y el contenedor
               const SizedBox(height: 30),
 
-              // Container decorado con el contenido - Animación de pulsación
+              // Container decorado con el formulario - Animación de pulsación
               TweenAnimationBuilder<double>(
                 key: UniqueKey(),
                 tween: Tween(begin: 0.0, end: 1.0),
@@ -610,19 +613,98 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
                   // Column dentro del contenedor
                   child: Column(
                     children: [
-                      // Widget de texto para párrafo informativo
+                      // Widget de texto descriptivo
                       const Text(
-                        'Esta es la tercera pantalla de la aplicación. '
-                        'El uso de setState() permite que Flutter redibuje solo '
-                        'las partes necesarias de la interfaz, haciendo que las '
-                        'aplicaciones sean rápidas y eficientes. Esta es una de '
-                        'las características principales de Flutter.',
-                        style: TextStyle(fontSize: 16, height: 1.5),
-                        textAlign: TextAlign.justify,
+                        'Escribe un mensaje y presiona enviar para ver un SnackBar con tu texto:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          height: 1.5,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
 
-                      // Espacio entre el texto y el botón
+                      // Espacio entre el texto y el campo
                       const SizedBox(height: 20),
+
+                      // Campo de texto del formulario
+                      TextField(
+                        controller: _textController,
+                        decoration: InputDecoration(
+                          labelText: 'Escribe tu mensaje',
+                          hintText: 'Ingresa algo aquí...',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: const Icon(Icons.message),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        maxLines: 3,
+                      ),
+
+                      // Espacio entre el campo y el botón
+                      const SizedBox(height: 20),
+
+                      // Botón para enviar el formulario
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          // Obtener el texto del controlador
+                          String textoIngresado = _textController.text;
+
+                          // Validar que el campo no esté vacío
+                          if (textoIngresado.trim().isEmpty) {
+                            // Mostrar mensaje de error si está vacío
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  '⚠️ Por favor, escribe algo antes de enviar',
+                                ),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          } else {
+                            // Mostrar el SnackBar con el texto ingresado
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('📝 Tu mensaje: $textoIngresado'),
+                                backgroundColor: Colors.orange,
+                                duration: const Duration(seconds: 3),
+                                action: SnackBarAction(
+                                  label: 'Cerrar',
+                                  textColor: Colors.white,
+                                  onPressed: () {
+                                    // Cerrar el SnackBar
+                                  },
+                                ),
+                              ),
+                            );
+
+                            // Limpiar el campo de texto después de enviar
+                            _textController.clear();
+                          }
+                        },
+                        icon: const Icon(Icons.send),
+                        label: const Text(
+                          'Enviar',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+
+                      // Espacio entre botones
+                      const SizedBox(height: 12),
 
                       // Botón para volver a la pantalla principal
                       ElevatedButton.icon(
@@ -633,7 +715,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
                           style: TextStyle(fontSize: 16),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
+                          backgroundColor: Colors.orange.shade700,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
